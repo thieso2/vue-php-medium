@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql:8.4
+    ports:
+      - "127.0.0.1:${FORWARD_DB_PORT:-3307}:3306"
+    environment:
+      MYSQL_DATABASE: daymark
+      MYSQL_USER: daymark
+      MYSQL_PASSWORD: ${DB_PASSWORD:-daymark_local}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_local_only}
+    volumes:
+      - daymark_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+volumes:
+  daymark_mysql:
